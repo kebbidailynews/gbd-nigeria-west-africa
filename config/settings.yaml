@@ -1,0 +1,15 @@
+project:
+  author: "Ekemini Thompson"
+  primary_country: "Nigeria"
+  region: "Western Sub-Saharan Africa"
+  start_year: 1990
+  end_year: 2023
+  gbd_release: "GBD 2023"
+  input_file: "data/processed/gbd_harmonised.csv"
+  output_dir: "results"
+analysis:
+  primary_measures: ["DALYs", "YLLs", "YLDs"]
+  focus_groups: ["Neurological disorders", "Vision-related conditions"]
+  uncertainty_level: 95
+  figure_dpi: 300
+  minimum_years_for_trend: 5
