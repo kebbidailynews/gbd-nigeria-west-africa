@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it as below and cite the underlying data sources."
+title: "Global Burden of Disease in Nigeria and West Africa: Reproducible Analysis Framework"
+authors:
+  - family-names: Thompson
+    given-names: Ekemini
+version: 0.2.0
+date-released: 2026-11-08
+license: MIT
+type: software
