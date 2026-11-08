@@ -1,0 +1,20 @@
+# Populate against the exact selected GBD release hierarchy.
+neurological:
+  - Stroke
+  - Epilepsy
+  - Alzheimer's disease and other dementias
+  - Parkinson's disease
+  - Migraine
+  - Tension-type headache
+  - Meningitis
+vision:
+  - Blindness and vision loss
+  - Cataract
+  - Glaucoma
+  - Age-related macular degeneration
+  - Diabetic retinopathy
+  - Refractive disorders
+notes:
+  - Verify labels and hierarchy IDs against the selected GBD release.
+  - Do not sum parent causes and child causes.
+  - Distinguish impairment outcomes from underlying ophthalmic causes.
