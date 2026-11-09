@@ -30,5 +30,5 @@ def test_rejects_duplicate_estimate_key(tmp_path):
 
 
 def test_rejects_year_outside_study_window(tmp_path):
-    p=tmp_path/"year.csv"; frame().to_csv(p,index=False)
+    d=frame(); d.loc[0,"year"]=1980; p=tmp_path/"year.csv"; d.to_csv(p,index=False)
     with pytest.raises(ValueError,match="minimum"): load_and_validate(p,min_year=1990,max_year=2023)
