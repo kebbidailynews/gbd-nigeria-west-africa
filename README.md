@@ -2,136 +2,111 @@
 
 **Principal author:** Ekemini Thompson  
 **Primary setting:** Nigeria  
-**Comparative setting:** West Africa  
+**Regional benchmark:** Western Sub-Saharan Africa (GBD region; includes Nigeria)  
 **Primary data release:** GBD 2023 (estimates through 2023)  
 **Period:** 1990–2023  
 **Status:** Research protocol and reproducible analysis framework; empirical results are pending verified source data.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Tests](https://github.com/kebbidailynews/gbd-nigeria-west-africa/actions/workflows/tests.yml/badge.svg)](https://github.com/kebbidailynews/gbd-nigeria-west-africa/actions/workflows/tests.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Research question
 
-How has disease burden changed in Nigeria and West Africa, and how do neurological disorders and vision-related conditions contribute to DALYs, YLLs and YLDs, accounting for demographic change and uncertainty?
+How has disease burden changed in Nigeria and the GBD Western Sub-Saharan Africa region, and how do neurological disorders and vision-related conditions contribute to DALYs, YLLs and YLDs, accounting for demographic change and uncertainty?
 
 ## Scientific integrity notice
 
-This repository does **not** contain fabricated GBD observations or claim to reproduce IHME estimates independently. It provides a validated workflow for analysing lawfully obtained, versioned source data. Results remain pending until the required source extracts are added and validated. GBD uncertainty intervals are not treated as conventional confidence intervals. Point estimates and marginal interval bounds are not sufficient to reconstruct posterior draws or dependence structures.
+This repository does not contain fabricated GBD observations or claim to reproduce IHME estimates independently. It provides a reproducible workflow for analysing lawfully obtained, versioned source data. Results remain pending until the required source extracts are added and validated. GBD uncertainty intervals are not treated as conventional confidence intervals. Point estimates and marginal interval bounds are not sufficient to reconstruct posterior draws or dependence structures.
+
+## Critical geographic qualification
+
+Nigeria is included in the GBD Western Sub-Saharan Africa regional estimate. The regional estimate is therefore a nested benchmark, not an independent comparator. If a leave-Nigeria-out comparator is required, verify the exact GBD 2023 country membership and aggregate compatible country counts and denominators (or paired draws). Never use an unweighted mean of country rates. See the data acquisition protocol.
 
 ## Core measures
 
 - DALYs = YLLs + YLDs.
-- YLLs = deaths × standard remaining life expectancy at age of death.
-- YLDs follow the selected GBD release methodology; prevalence × disability weight is a conceptual summary and may require adjustments for comorbidity and sequelae.
+- YLLs = deaths multiplied by standard remaining life expectancy at age of death.
+- YLDs follow the selected GBD release methodology; prevalence multiplied by disability weight is a conceptual summary and may require adjustments for comorbidity and sequelae.
 
 Prefer published GBD estimates for DALYs, YLLs and YLDs. Do not recompute them from incomplete inputs.
 
+## Neurological and vision estimands
+
+The primary neurological analysis uses the basic GBD Level 2 neurological cause group. A separately labelled expanded nervous-system analysis may include selected conditions from other GBD branches, but must be prespecified and must avoid overlap. These are not interchangeable estimands.
+
+Vision impairment (blindness and vision loss) is selected in the impairment context. Ophthalmic causes (such as cataract, refractive disorders, glaucoma, diabetic retinopathy and age-related macular degeneration) are selected separately in the cause context. Do not add impairment totals to cause totals.
+
+See [the estimand specification](docs/neurological_and_vision_estimands.md) and [the provisional mapping](config/disease_mapping.yaml). Final classifications require GBD 2023 IDs and hierarchy levels.
+
 ## Data sources and acquisition
 
-1. [IHME GBD Results](https://vizhub.healthdata.org/gbd-results/) — select GBD 2023 and record extraction details.
-   - GBD 2023 flagship paper: https://doi.org/10.1016/S0140-6736(25)01637-X
-   - Official GBD overview: https://healthdata.org/research-analysis/gbd
-2. [IHME data resources](https://www.healthdata.org/data-tools-practices/data)
-3. [WHO Global Health Observatory](https://www.who.int/data/gho)
-4. [WHO World Report on Vision](https://www.who.int/publications/i/item/9789241516570)
-5. [World Bank World Development Indicators](https://databank.worldbank.org/source/world-development-indicators)
-6. [UN World Population Prospects](https://population.un.org/wpp/)
+1. [IHME GBD Results Tool](https://vizhub.healthdata.org/gbd-results/) — select GBD 2023 and record extraction details.
+2. [GBD 2023 flagship study](https://doi.org/10.1016/S0140-6736(25)01637-X).
+3. [IHME GBD overview](https://healthdata.org/gbd).
+4. [WHO Global Health Observatory](https://www.who.int/data/gho).
+5. [WHO World Report on Vision](https://www.who.int/publications/i/item/9789241516570).
 
-Access conditions, citation requirements and redistribution rights vary by source and release. Download the required extracts directly from their official providers. Do not commit restricted source files. Record release, extraction date, filters, units and source URL in `data/metadata/source_manifest.csv`.
+An account is required to download estimates from the GBD Results Tool. Use narrow query batches: the tool documentation warns that very large queries can omit requested dimensions. Download cause and impairment contexts separately, retain IDs and names, and reconcile expected dimensions before analysis.
+
+Access conditions, citation requirements and redistribution rights vary by source and release. Do not commit restricted source files. Record release, extraction date, filters, units, source URL, query permalink and SHA-256 checksum in the source manifest.
 
 ### Expected analytical input
 
-A harmonised CSV should contain at least:
+The harmonised CSV must contain:
 
-`measure, location, year, sex, age, cause, metric, value, lower, upper`
+    measure, location, year, sex, age, cause, metric, value, lower, upper
 
-Recommended values:
-- `measure`: DALYs, YLLs, YLDs, deaths, prevalence, incidence
-- `metric`: Number or Rate
-- `value`, `lower`, `upper`: same units and scale
-- `location`: standardised country or regional label
-- `year`: integer
-- `sex`, `age`, `cause`: source-defined categories
+Recommended optional fields include location_id, cause_id, parent_cause_id, hierarchy_level, estimate_context, age_standard, and source_file. Preserve original source IDs and labels. Do not replace IDs with fuzzy text matching.
 
-For robust uncertainty propagation, add posterior draw columns or a separate long-form draw file. The current pipeline validates summary estimates and plots marginal 95% uncertainty intervals; it does not infer joint uncertainty from summary bounds.
+For robust uncertainty propagation, add posterior draw columns or a separate long-form draw file. GBD 2023 uses 250 draws for its reported estimates; use the original draw IDs when available and permitted. Do not synthesize or independently re-number draws.
 
-See `docs/data_dictionary.md` and `docs/methodology.md`.
+See [the data dictionary](docs/data_dictionary.md), [methods framework](docs/methodology.md), and [acquisition protocol](docs/data_acquisition_protocol.md).
 
 ## Quick start
 
-```bash
-git clone https://github.com/kebbidailynews/gbd-nigeria-west-africa.git
-cd gbd-nigeria-west-africa
-python -m venv .venv
-# macOS/Linux
-source .venv/bin/activate
-# Windows PowerShell: .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-cp data/metadata/source_manifest_template.csv data/metadata/source_manifest.csv
-# Add a permitted, harmonised extract at data/processed/gbd_harmonised.csv
-python scripts/validate_data.py --input data/processed/gbd_harmonised.csv
-python scripts/run_pipeline.py --input data/processed/gbd_harmonised.csv
-pytest
-```
+    git clone https://github.com/kebbidailynews/gbd-nigeria-west-africa.git
+    cd gbd-nigeria-west-africa
+    python -m venv .venv
 
-Optional R workflow: install R >= 4.2 and packages `readr`, `dplyr`, `ggplot2`, `tidyr`; run `R/run_analysis.R data/processed/gbd_harmonised.csv`.
+Activate the environment (macOS/Linux: source .venv/bin/activate; Windows PowerShell: .venv\Scripts\Activate.ps1), then:
+
+    pip install -r requirements.txt
+    cp data/metadata/source_manifest_template.csv data/metadata/source_manifest.csv
+    python scripts/validate_data.py --input data/processed/gbd_harmonised.csv
+    python scripts/run_pipeline.py --input data/processed/gbd_harmonised.csv
+    pytest -q
+
+Optional R workflow: install R >= 4.2 and packages readr, dplyr, ggplot2 and tidyr; run Rscript R/run_analysis.R data/processed/gbd_harmonised.csv.
 
 ## Outputs
 
-The pipeline writes:
-- CSV summaries to `results/tables/`
-- PNG figures (300 dpi) to `results/figures/`
-- validation and run metadata to `results/statistical_outputs/`
-
-Figures are generated only from the supplied validated data. Empty result directories are intentional until source data are provided.
+The pipeline writes CSV summaries to results/tables, PNG figures (300 dpi) to results/figures, and run metadata to results/statistical_outputs. Figures are generated only from supplied validated data. Empty result directories are intentional until source data are provided.
 
 ## Repository map
 
-- `src/`: validation, metrics, trend summaries and plotting
-- `scripts/`: command-line entry points
-- `R/`: complementary R analysis
-- `tests/`: unit tests using explicitly synthetic test data
-- `manuscript/`: protocol-stage manuscript
-- `config/`: analysis settings and disease group mappings
-- `data/`: no source data included by default
+- src/: validation, metrics, uncertainty, decomposition, trends and plotting
+- scripts/: command-line entry points
+- R/: complementary R analysis
+- tests/: unit tests using explicitly synthetic test data
+- manuscript/: protocol-stage manuscript
+- config/: analysis settings and provisional disease group mappings
+- data/: no source data included by default
+- docs/: methods, data acquisition, estimands, limitations and reporting guidance
 
-## Disease classification
+## Reporting and reproducibility
 
-The cause hierarchy must be mapped to the selected GBD release before analysis. Neurological and vision categories must be selected using the official release hierarchy. Avoid double-counting aggregate categories and their child causes. Vision impairment and ophthalmic causes are not interchangeable; document any supplementary WHO estimates separately.
-
-## Manuscript and reporting
-
-The manuscript is currently a protocol/framework, not a completed results paper. Use GATHER principles for health estimates and applicable STROBE guidance. Update title, year range, methods and results only after the release and data are verified.
-
-## Reproducibility
-
-Record:
-- GBD release/version and download date
-- source filters and location/cause hierarchy
-- population standard used for age standardisation
-- software versions and random seeds
-- all transformations and exclusions
-- uncertainty data structure and assumptions
-
-## Citation
-
-See `CITATION.cff`. Cite the exact GBD release and original data provider in any resulting publication.
-
-## License
-
-Original code is MIT-licensed. Third-party datasets remain subject to their own licences and access terms.
+Follow the 18-item [GATHER reporting checklist](https://www.who.int/data/gather) and applicable STROBE guidance. Record the GBD release, download date, query filters, source IDs, population standard, units, software versions, transformations, exclusions and checksums. See the GATHER tracker in docs/GATHER_checklist.md.
 
 ## Advanced analysis modules
 
-- **Posterior-draw uncertainty:** pass `--draws path/to/draws.csv` to the pipeline. The long-form file must contain `measure, location, year, sex, age, cause, metric, draw_id, value`. The pipeline calculates empirical central 95% intervals from the draws. Draw-wise derived metrics must preserve draw pairing; see `docs/uncertainty_and_decomposition.md`.
-- **Demographic decomposition:** `src/decomposition.py` provides an exact three-factor Shapley decomposition of burden change into total population growth, age-structure change and age-specific rate change. It requires comparable age-specific population and rate inputs at both endpoints.
+- Posterior-draw uncertainty: pass --draws path/to/draws.csv to the pipeline. The long-form file must contain estimate-identifying columns plus draw_id and value. Preserve original pairing.
+- Demographic decomposition: src/decomposition.py decomposes change into total population growth, age-structure change and age-specific rate change. It requires compatible age-specific populations and rates at both endpoints.
 
-These methods are available for analysis but are not evidence that the corresponding source data have already been acquired. Do not run a draw analysis on fabricated or independently re-numbered draws.
+These methods are available for analysis but do not indicate that source data have already been acquired.
 
-## Data acquisition gate
+## Manuscript status
 
-Follow [`docs/data_acquisition_protocol.md`](docs/data_acquisition_protocol.md)
-before analysis. The primary study uses the GBD region Western Sub-Saharan Africa
-only if that is the intended estimand; country-level West Africa must be explicitly
-defined. Regional totals must never be added to constituent country estimates.
-The official WHO GATHER checklist is tracked in
-[`docs/GATHER_checklist.md`](docs/GATHER_checklist.md).
+The manuscript is a protocol/framework, not a completed empirical paper. No empirical findings should be written until the official extracts, hierarchy mappings, units, uncertainty data and geographic definitions pass review.
+
+## Citation and licensing
+
+See CITATION.cff. Cite the exact GBD release and original data provider in any resulting publication. Original code is MIT-licensed; third-party datasets remain subject to their own licences and access terms.
