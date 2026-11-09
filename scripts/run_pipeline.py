@@ -2,7 +2,11 @@
 """Run reproducible summaries and figures on a validated harmonised extract."""
 import argparse
 from pathlib import Path
+from datetime import datetime, timezone
+import hashlib
+import importlib.metadata
 import json
+import platform
 import pandas as pd
 
 from src.data_validation import load_and_validate
@@ -56,7 +60,13 @@ if a.draws:
     draw_summary_rows = int(len(summary))
 
 metadata = {
+    "run_timestamp_utc": datetime.now(timezone.utc).isoformat(),
+    "python_version": platform.python_version(),
+    "package_versions": {name: importlib.metadata.version(name) for name in ["pandas", "numpy", "scipy", "matplotlib"]},
     "input": str(a.input),
+    "input_sha256": hashlib.sha256(Path(a.input).read_bytes()).hexdigest(),
+    "source_manifest_path": "data/metadata/source_manifest.csv",
+    "source_manifest_present": Path("data/metadata/source_manifest.csv").exists(),
     "rows": int(len(df)),
     "locations": sorted(df.location.unique().tolist()),
     "year_range_observed": [int(df.year.min()), int(df.year.max())],
