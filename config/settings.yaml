@@ -2,6 +2,7 @@ project:
   author: "Ekemini Thompson"
   primary_country: "Nigeria"
   region: "Western Sub-Saharan Africa"
+  region_comparison_note: "GBD regional estimate includes Nigeria; use as a nested regional benchmark, not an independent comparator."
   start_year: 1990
   end_year: 2023
   gbd_release: "GBD 2023"
@@ -9,7 +10,8 @@ project:
   output_dir: "results"
 analysis:
   primary_measures: ["DALYs", "YLLs", "YLDs"]
-  focus_groups: ["Neurological disorders", "Vision-related conditions"]
+  focus_groups: ["Basic GBD neurological group", "Expanded nervous-system conditions", "Vision impairment outcomes", "Ophthalmic causes"]
   uncertainty_level: 95
+  expected_gbd_draws: 250
   figure_dpi: 300
   minimum_years_for_trend: 5
