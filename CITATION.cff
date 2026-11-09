@@ -4,7 +4,7 @@ title: "Global Burden of Disease in Nigeria and West Africa: Reproducible Analys
 authors:
   - family-names: Thompson
     given-names: Ekemini
-version: 0.2.0
+version: 0.3.0
 date-released: 2026-11-08
 license: MIT
 type: software
