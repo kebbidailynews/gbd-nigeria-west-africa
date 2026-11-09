@@ -1,20 +1,39 @@
-# Populate against the exact selected GBD release hierarchy.
-neurological:
-  - Stroke
-  - Epilepsy
+# Provisional thematic crosswalk, NOT a substitute for the GBD 2023 hierarchy.
+# Populate exact IDs and levels from the official release before analysis.
+# Keep the basic Level 2 cause group separate from expanded cross-hierarchy conditions.
+basic_gbd_neurological_group:
   - Alzheimer's disease and other dementias
   - Parkinson's disease
-  - Migraine
-  - Tension-type headache
+  - Epilepsy
+  - Multiple sclerosis
+  - Motor neuron disease
+  - Headache disorders
+  - Other neurological disorders
+
+expanded_nervous_system_conditions:
+  - Stroke
   - Meningitis
-vision:
+  - Encephalitis
+  - Tetanus
+  - Neonatal encephalopathy
+  - Nervous system cancer
+  - Neural tube defects
+  - Traumatic brain injury
+  - Spinal cord injury
+
+vision_impairment_outcomes:
   - Blindness and vision loss
+
+ophthalmic_causes:
+  - Refractive disorders
   - Cataract
+  - Diabetic retinopathy
   - Glaucoma
   - Age-related macular degeneration
-  - Diabetic retinopathy
-  - Refractive disorders
-notes:
-  - Verify labels and hierarchy IDs against the selected GBD release.
-  - Do not sum parent causes and child causes.
-  - Distinguish impairment outcomes from underlying ophthalmic causes.
+
+rules:
+  - Verify every label and numeric hierarchy ID against GBD 2023.
+  - Do not sum parent causes with their children.
+  - Do not sum basic neurological causes with the expanded nervous-system group.
+  - Do not sum vision impairment outcomes with their ophthalmic causes.
+  - Treat conditions with neurological sequelae as expanded analyses only when the estimand is explicitly defined.
