@@ -1,20 +1,31 @@
-# Data acquisition protocol
+# Data acquisition protocol: GBD 2023
 
-1. Use the IHME GBD Results tool and explicitly select GBD 2023.
-2. Select years 1990–2023, Nigeria, and the comparator geography defined in the protocol.
-3. Export DALYs, YLLs and YLDs; retain metric (number/rate), sex, age, cause and uncertainty fields.
-4. Obtain age-specific population estimates for decomposition from a documented compatible source/release.
-5. For neurological causes, export the relevant cause hierarchy levels and retain cause IDs.
-6. For vision, separately define impairment outcomes and ophthalmic causes. Do not merge these constructs without a justified estimand.
-7. Record filters, query permalink, release, timestamp, units, standard population, hierarchy IDs, file checksum and access terms in the source manifest.
-8. Keep source downloads private unless the provider explicitly permits redistribution. Never upload restricted extracts to this public repository.
-9. Validate labels, units, duplicates, interval ordering, missing years and hierarchy nesting before analysis.
-10. Freeze the analysis dataset and record a SHA-256 checksum before producing tables or figures.
+## Access and extraction
 
-## Geographic estimand gate
+1. Sign in or register for the official IHME GBD Results Tool: https://vizhub.healthdata.org/gbd-results/. An account is required for downloads.
+2. Explicitly select GBD 2023 and years 1990–2023. Do not mix estimates from GBD 2021 or other releases.
+3. Run relatively narrow queries. IHME tool guidance warns that very large queries may omit selected years, ages or other requested results. Export separate query batches and reconcile row counts.
+4. For the cause context, export DALYs, YLLs and YLDs for Nigeria and Western Sub-Saharan Africa. Include both sexes, male and female, and the age groups needed for prespecified analyses. Export counts and rates as separate metrics where needed.
+5. For the basic neurological cause group, export the Level 2 parent for a benchmark. Then export selected Level 3/4 child causes for detailed ranking and trends. Never add a parent estimate to its children.
+6. For an expanded nervous-system analysis, export the separately prespecified cross-hierarchy causes. Keep this estimand distinct from the basic GBD neurological Level 2 group.
+7. For vision, run a separate impairment query for blindness and vision loss. Run separate cause queries for cataract, refractive disorders, glaucoma, diabetic retinopathy and age-related macular degeneration. Do not add the impairment total to cause-specific estimates.
+8. Obtain population estimates by age, sex, location and year from a compatible GBD 2023 source for any custom regional aggregation or demographic decomposition.
+9. Retain IDs and names for locations, causes/impairments, measures, metrics, ages and sexes. Prefer exports that include both IDs and names.
+10. Record the query share link, download timestamp, file names, SHA-256 checksums, source release, filters, age standard, units, uncertainty fields and terms of use in data/metadata/source_manifest.csv.
 
-Western Sub-Saharan Africa is an IHME-defined region and is not automatically identical to a custom West Africa list. Name the intended comparator explicitly. Never sum a region with its component countries.
+## Geography
 
-## Release gate
+The GBD Western Sub-Saharan Africa regional estimate includes Nigeria. It is a useful regional benchmark but is not independent of the Nigeria estimate. If the research question requires a comparator excluding Nigeria, verify the region's 2023 country membership from the official location hierarchy and build a leave-Nigeria-out aggregate using country-level counts and compatible denominators or paired draws. Do not average country rates or combine overlapping regional and country totals.
 
-Do not report empirical findings until source extracts have passed validation and all mappings and filters have been independently reviewed.
+## Query batching and reconciliation
+
+- Batch by estimate context (cause versus impairment), measure, and manageable location/cause selections.
+- Keep age, sex, year and metric filters identical across comparison batches.
+- After download, verify that all expected years, locations, sexes and age groups are present.
+- Compare downloaded row counts with the Cartesian product implied by selected dimensions, allowing only documented source-specific exclusions.
+- Do not concatenate files until columns, ID types and release metadata have been checked.
+- Preserve original downloaded files unchanged; work from versioned copies.
+
+## Data governance and release gate
+
+Do not upload source extracts to this public repository unless IHME terms explicitly permit redistribution. Keep restricted files private and document access conditions. Do not report empirical findings until all extracts, mappings, units, hierarchy nesting, uncertainty fields and geographic definitions have passed independent review.
